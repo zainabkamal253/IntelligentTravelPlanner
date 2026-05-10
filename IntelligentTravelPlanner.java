@@ -1,22 +1,8 @@
 /*
  * ====================================================================
- *  INTELLIGENT TRAVEL PLANNER — OOP Semester Project (Single File)
- *  Team: Muhammad Saadain Zahid, Armish Bibi, Zainab Kamal
- *  SEECS NUST BESE-16-A
- * --------------------------------------------------------------------
- *  v5.0 — Major Improvements:
- *   1. Interest-aware itineraries: "adventure in Lahore" gives
- *      adventure-specific places, not generic heritage sites.
- *   2. Local CSV (tourist_spots.csv) is now the PRIMARY data source —
- *      instant, accurate, offline-capable. APIs only used as enrichment.
- *   3. Local pakistan_cities.csv used for instant geocoding (no slow
- *      Nominatim call required for Pakistani cities).
- *   4. Itinerary Viewer redesigned with day-cards, descriptions,
- *      times-of-day, photos-style emoji icons, and travel tips.
- *   5. Activities are varied per day — no repetitive
- *      "Morning: Visit X / Afternoon: Explore Y" templates.
- *   6. Bug fixes: PlacesService class structure repaired, duplicate
- *      Dashboard buttons removed, validation tightened.
+ * INTELLIGENT TRAVEL PLANNER — OOP Semester Project (Single File)
+ * Team: Muhammad Saadain Zahid, Armish Bibi, Zainab Kamal
+ * SEECS NUST BESE-16-A
  * ====================================================================
  */
 
@@ -34,13 +20,15 @@ import javax.swing.border.*;
 
 public class IntelligentTravelPlanner {
 
+    // API Keys we got from the weather and place service websites
     public static final String WEATHER_API_KEY  = "2a01a9a5453a48a78cc113850260305";
     public static final String FOURSQUARE_TOKEN = "3KW001NN1DF5VL3L0SWFZKR1X4AEJGFDB5W0TPHQ1SHOQN54";
 
-    // Feature flags
+    // These help us turn features on or off easily while testing
     public static final boolean USE_REAL_WEATHER = true;
     public static final boolean USE_FOURSQUARE   = true;
 
+    // Main colors for the app theme (Blues and Grays)
     public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
     public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
     public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
@@ -54,7 +42,7 @@ public class IntelligentTravelPlanner {
     public static final Color CLR_BORDER   = new Color(180, 200, 235);
     public static final Color CLR_SOFT     = new Color(248, 250, 255);
 
-    // Interest accent colors — used by day-cards in the new viewer
+    // Special background colors for different trip types (Adventure, Food, etc.)
     public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
     public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
     public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
@@ -62,6 +50,7 @@ public class IntelligentTravelPlanner {
     public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
     public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
 
+    // Setting up fonts to use throughout the GUI so it looks consistent
     public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
     public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
     public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
@@ -73,18 +62,28 @@ public class IntelligentTravelPlanner {
     public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
     public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
 
+    // Main method to launch the application
     public static void main(String[] args) {
+        // Create a data folder for our files if it's missing
         new File("data").mkdirs();
+        
+        // Try to make the UI look like a standard Windows/Mac app
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
+        
+        // Initialize user management and add a default admin
         UserManager um = new UserManager();
         try { um.register("admin", "admin123", "admin@nust.edu.pk", true); }
         catch (AuthenticationException ignored) {}
-        // Pre-load tourist DB so first trip creation feels instant
+        
+        // Load the tourist database once at the start to save time
         TouristDB.getInstance();
+        
+        // Open the Login screen
         SwingUtilities.invokeLater(() -> new LoginFrame(um).setVisible(true));
     }
   
+    // Helper method to make all our buttons look the same
     public static JButton styledBtn(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setFont(FONT_BTN);
@@ -96,6 +95,8 @@ public class IntelligentTravelPlanner {
         btn.setMargin(new Insets(8, 15, 8, 15));
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        // Add a hover effect so the button changes color when the mouse is over it
         btn.addMouseListener(new MouseAdapter() {
             @Override public void mouseEntered(MouseEvent e) { btn.setBackground(bg.brighter()); }
             @Override public void mouseExited(MouseEvent e)  { btn.setBackground(bg); }
@@ -103,6 +104,7 @@ public class IntelligentTravelPlanner {
         return btn;
     }
 
+    // Creates the colored header bar at the top of windows
     public static JPanel headerPanel(String title, Color bg) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(bg);
@@ -113,6 +115,7 @@ public class IntelligentTravelPlanner {
         return p;
     }
 
+    // Sets up text areas for showing summaries or itineraries
     public static JTextArea styledTA() {
         JTextArea ta = new JTextArea();
         ta.setFont(FONT_MONO); ta.setEditable(false);
@@ -123,10 +126,12 @@ public class IntelligentTravelPlanner {
         return ta;
     }
 
+    // Shortcut for creating labels with our body font
     public static JLabel lbl(String t) {
         JLabel l = new JLabel(t); l.setFont(FONT_BODY); l.setForeground(CLR_DARK); return l;
     }
 
+    // Standard styling for input boxes (text fields)
     public static void styleField(JTextField f) {
         f.setFont(FONT_BODY); f.setPreferredSize(new Dimension(200, 34));
         f.setBorder(BorderFactory.createCompoundBorder(
@@ -134,12 +139,14 @@ public class IntelligentTravelPlanner {
             BorderFactory.createEmptyBorder(4, 10, 4, 10)));
     }
 
+    // Wraps a text area in a scroll pane so we can see long text
     public static JScrollPane scrollWrap(JTextArea ta) {
         JScrollPane sp = new JScrollPane(ta);
         sp.setBorder(BorderFactory.createLineBorder(CLR_BORDER, 1));
         return sp;
     }
 
+    // Logic to pick the right background color depending on the trip interest
     /** Background color matching the trip's interest theme. */
     public static Color interestBg(String interest) {
         if (interest == null) return CLR_SOFT;
@@ -154,6 +161,7 @@ public class IntelligentTravelPlanner {
         }
     }
 
+    // Logic to pick the accent color (for borders or icons) based on interest
     /** Accent color matching the interest. */
     public static Color interestAccent(String interest) {
         if (interest == null) return CLR_PRIMARY;

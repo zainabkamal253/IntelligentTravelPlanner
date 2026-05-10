@@ -1,6 +1,8 @@
 public interface Bookable {
-        void book();
-        void cancel();
-        double getCost();
-        boolean isConfirmed();
-    }
+
+    // methods related to booking functionality
+    void book();
+    void cancel();
+    double getCost();
+    boolean isConfirmed();
+}

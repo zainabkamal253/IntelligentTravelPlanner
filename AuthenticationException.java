@@ -1,3 +1,7 @@
 public class AuthenticationException extends Exception {
-        public AuthenticationException(String m) { super(m); }
+
+    // custom exception for authentication errors
+    public AuthenticationException(String m) {
+        super(m);
     }
+}

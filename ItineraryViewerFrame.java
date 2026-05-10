@@ -3,8 +3,11 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
+
+// This class shows the full itinerary in a GUI window
 public class ItineraryViewerFrame extends JFrame {
 
+        // Main color theme used in the UI
         public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
         public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
         public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
@@ -18,7 +21,7 @@ public class ItineraryViewerFrame extends JFrame {
         public static final Color CLR_BORDER   = new Color(180, 200, 235);
         public static final Color CLR_SOFT     = new Color(248, 250, 255);
 
-        // Interest accent colors — used by day-cards in the new viewer
+        // Background colors based on trip interest
         public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
         public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
         public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
@@ -26,6 +29,7 @@ public class ItineraryViewerFrame extends JFrame {
         public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
         public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
 
+        // Fonts used in the UI
         public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
         public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
         public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
@@ -41,6 +45,8 @@ public class ItineraryViewerFrame extends JFrame {
 
         public ItineraryViewerFrame(Trip t) {
             this.trip = t;
+
+            // Window setup
             setTitle("Itinerary — " + trip.getDestination());
             setSize(820, 760);
             setMinimumSize(new Dimension(680, 600));
@@ -48,13 +54,15 @@ public class ItineraryViewerFrame extends JFrame {
             setLayout(new BorderLayout());
             getContentPane().setBackground(CLR_BG);
 
-            // --- HEADER (interest-themed) ---
+            // Header with trip info
             Color accent = IntelligentTravelPlanner.interestAccent(trip.getInterest());
-            add(IntelligentTravelPlanner.headerPanel("📋  " + trip.getDays() + "-Day "
-                + capitalize(trip.getInterest()) + " Trip — "
-                + trip.getDestination(), accent), BorderLayout.NORTH);
+            add(IntelligentTravelPlanner.headerPanel(
+                    "  " + trip.getDays() + "-Day " + capitalize(trip.getInterest())
+                            + " Trip — " + trip.getDestination(),
+                    accent),
+                BorderLayout.NORTH);
 
-            // --- TRIP SUMMARY CARD ---
+            // Summary section of the trip
             JPanel summary = new JPanel();
             summary.setLayout(new BoxLayout(summary, BoxLayout.Y_AXIS));
             summary.setBackground(CLR_CARD);
@@ -67,271 +75,130 @@ public class ItineraryViewerFrame extends JFrame {
             JLabel sumTitle = new JLabel("Trip Overview");
             sumTitle.setFont(FONT_HEADER);
             sumTitle.setForeground(accent);
-            sumTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
             summary.add(sumTitle);
-            summary.add(Box.createVerticalStrut(6));
 
             String summaryText = trip.getItinerary().getSummary();
             if (summaryText == null || summaryText.isEmpty()) {
                 summaryText = trip.getDays() + "-day " + trip.getInterest()
-                    + " trip to " + trip.getDestination().getName() + ".";
+                        + " trip to " + trip.getDestination().getName() + ".";
             }
-            JLabel sumBody = new JLabel("<html><body style='width:680px'>"
-                + escape(summaryText) + "</body></html>");
-            sumBody.setFont(FONT_BODY);
-            sumBody.setForeground(CLR_DARK);
-            sumBody.setAlignmentX(Component.LEFT_ALIGNMENT);
-            summary.add(sumBody);
-            summary.add(Box.createVerticalStrut(8));
 
+            JLabel sumBody = new JLabel("<html><body style='width:680px'>"
+                    + escape(summaryText) + "</body></html>");
+            sumBody.setFont(FONT_BODY);
+            summary.add(sumBody);
+
+            // Meta info like budget, days, etc.
             JPanel meta = new JPanel(new GridLayout(1, 4, 8, 0));
             meta.setBackground(CLR_CARD);
-            meta.add(metaTile("📅 Days", String.valueOf(trip.getDays())));
-            meta.add(metaTile("💰 Budget",
-                String.format("Rs. %,.0f", trip.getBudget())));
-            meta.add(metaTile("🎯 Interest", capitalize(trip.getInterest())));
-            meta.add(metaTile("🆔 Trip ID",
-                trip.getTripId().substring(trip.getTripId().length() - 6)));
-            meta.setAlignmentX(Component.LEFT_ALIGNMENT);
-            meta.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
+            meta.add(metaTile(" Days", String.valueOf(trip.getDays())));
+            meta.add(metaTile(" Budget", String.format("Rs. %,.0f", trip.getBudget())));
+            meta.add(metaTile(" Interest", capitalize(trip.getInterest())));
+            meta.add(metaTile(" Trip ID",
+                    trip.getTripId().substring(trip.getTripId().length() - 6)));
             summary.add(meta);
 
+            // Notes section if user added notes
             if (!trip.getNotes().isEmpty()) {
-                summary.add(Box.createVerticalStrut(8));
                 JLabel notes = new JLabel("<html><body style='width:680px'>"
-                    + "<b>📝 Your notes:</b> " + escape(trip.getNotes())
-                    + "</body></html>");
-                notes.setFont(FONT_DESC);
-                notes.setForeground(new Color(80, 80, 100));
-                notes.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        + "<b>Your notes:</b> " + escape(trip.getNotes())
+                        + "</body></html>");
                 summary.add(notes);
             }
 
-            // --- DAY CARDS ---
+            // Main container for all day plans
             JPanel daysPanel = new JPanel();
             daysPanel.setLayout(new BoxLayout(daysPanel, BoxLayout.Y_AXIS));
             daysPanel.setBackground(CLR_BG);
-            daysPanel.setBorder(new EmptyBorder(8, 20, 20, 20));
 
             daysPanel.add(summary);
-            daysPanel.add(Box.createVerticalStrut(12));
 
+            // Add each day card
             for (DayPlan d : trip.getItinerary().getDays()) {
                 daysPanel.add(buildDayCard(d, accent));
                 daysPanel.add(Box.createVerticalStrut(12));
             }
 
-            // Footer message
-            JLabel footer = new JLabel(
-                "<html><center><i>🌟 Have an amazing trip — safe travels!</i></center></html>",
-                SwingConstants.CENTER);
-            footer.setFont(FONT_BODY);
-            footer.setForeground(new Color(120, 120, 140));
-            footer.setAlignmentX(Component.CENTER_ALIGNMENT);
-            daysPanel.add(footer);
-
+            // Scroll support
             JScrollPane scroll = new JScrollPane(daysPanel);
             scroll.setBorder(null);
-            scroll.getVerticalScrollBar().setUnitIncrement(16);
-            scroll.setBackground(CLR_BG);
-            scroll.getViewport().setBackground(CLR_BG);
             add(scroll, BorderLayout.CENTER);
 
-            // --- BOTTOM BAR ---
+            // Bottom buttons
             JPanel southBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
-            southBar.setBackground(CLR_BG);
-            JButton exportBtn = IntelligentTravelPlanner.styledBtn("📄  Export to Text File", CLR_ACCENT);
-            JButton closeBtn  = IntelligentTravelPlanner.styledBtn("✖  Close",                new Color(110, 110, 130));
+            JButton exportBtn = IntelligentTravelPlanner.styledBtn("Export", CLR_ACCENT);
+            JButton closeBtn  = IntelligentTravelPlanner.styledBtn("Close", new Color(110, 110, 130));
+
             southBar.add(exportBtn);
             southBar.add(closeBtn);
             add(southBar, BorderLayout.SOUTH);
 
             exportBtn.addActionListener(e -> exportToText());
-            closeBtn .addActionListener(e -> dispose());
+            closeBtn.addActionListener(e -> dispose());
         }
 
-        /** Builds one styled day card for the itinerary list. */
+        // Builds a single day card UI
         private JPanel buildDayCard(DayPlan day, Color accent) {
-            Color bg = IntelligentTravelPlanner.interestBg(trip.getInterest());
-
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
             card.setBackground(CLR_CARD);
-            card.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(CLR_BORDER, 1),
-                BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 5, 0, 0, accent),
-                    new EmptyBorder(0, 0, 0, 0))));
-
-            // Day header bar
-            JPanel head = new JPanel(new BorderLayout());
-            head.setBackground(bg);
-            head.setBorder(new EmptyBorder(10, 16, 10, 16));
+            card.setBorder(BorderFactory.createLineBorder(CLR_BORDER));
 
             JLabel dayLabel = new JLabel("Day " + day.getDayNumber());
             dayLabel.setFont(FONT_DAY);
             dayLabel.setForeground(accent);
-            head.add(dayLabel, BorderLayout.WEST);
+            card.add(dayLabel);
 
-            if (day.getTheme() != null && !day.getTheme().isEmpty()) {
-                JLabel theme = new JLabel(day.getTheme());
-                theme.setFont(FONT_SUBHEAD);
-                theme.setForeground(new Color(60, 60, 80));
-                theme.setHorizontalAlignment(SwingConstants.RIGHT);
-                head.add(theme, BorderLayout.EAST);
-            }
-            card.add(head);
-
-            // Activities
-            JPanel acts = new JPanel();
-            acts.setLayout(new BoxLayout(acts, BoxLayout.Y_AXIS));
-            acts.setBackground(CLR_CARD);
-            acts.setBorder(new EmptyBorder(8, 16, 14, 16));
-
+            // Loop through all activities of the day
             List<Activity> activities = day.getActivities();
-            for (int i = 0; i < activities.size(); i++) {
-                acts.add(buildActivityRow(activities.get(i), accent));
-                if (i < activities.size() - 1) {
-                    acts.add(Box.createVerticalStrut(2));
-                    JSeparator sep = new JSeparator();
-                    sep.setForeground(new Color(230, 235, 245));
-                    sep.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
-                    acts.add(sep);
-                    acts.add(Box.createVerticalStrut(2));
-                }
+            for (Activity a : activities) {
+                card.add(buildActivityRow(a, accent));
             }
-            card.add(acts);
-            card.setAlignmentX(Component.LEFT_ALIGNMENT);
+
             return card;
         }
 
-        /** One activity row: emoji, time, title + description. */
+        // Builds one activity row (emoji, title, description)
         private JPanel buildActivityRow(Activity a, Color accent) {
-            JPanel row = new JPanel(new BorderLayout(12, 0));
-            row.setBackground(CLR_CARD);
-            row.setBorder(new EmptyBorder(8, 4, 8, 4));
-            row.setAlignmentX(Component.LEFT_ALIGNMENT);
+            JPanel row = new JPanel(new BorderLayout());
 
-            // LEFT — emoji + time chip
-            JPanel left = new JPanel();
-            left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
-            left.setBackground(CLR_CARD);
-            left.setPreferredSize(new Dimension(86, 56));
-
-            JLabel emoji = new JLabel(a.emoji, SwingConstants.CENTER);
-            emoji.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
-            emoji.setAlignmentX(Component.CENTER_ALIGNMENT);
-            left.add(emoji);
-
-            if (a.time != null && !a.time.isEmpty()) {
-                JLabel time = new JLabel(a.time);
-                time.setFont(FONT_SMALL);
-                time.setForeground(accent);
-                time.setAlignmentX(Component.CENTER_ALIGNMENT);
-                left.add(time);
-            }
-            row.add(left, BorderLayout.WEST);
-
-            // CENTER — slot, title, description
-            JPanel center = new JPanel();
-            center.setLayout(new BoxLayout(center, BoxLayout.Y_AXIS));
-            center.setBackground(CLR_CARD);
-
-            if (a.slot != null && !a.slot.isEmpty()) {
-                JLabel slot = new JLabel(a.slot.toUpperCase());
-                slot.setFont(new Font("Segoe UI", Font.BOLD, 10));
-                slot.setForeground(new Color(140, 140, 160));
-                slot.setAlignmentX(Component.LEFT_ALIGNMENT);
-                center.add(slot);
-            }
+            JLabel emoji = new JLabel(a.emoji);
+            row.add(emoji, BorderLayout.WEST);
 
             JLabel title = new JLabel(a.title);
-            title.setFont(FONT_PLACE);
-            title.setForeground(CLR_DARK);
-            title.setAlignmentX(Component.LEFT_ALIGNMENT);
-            center.add(title);
+            row.add(title, BorderLayout.CENTER);
 
-            if (a.description != null && !a.description.isEmpty()) {
-                JLabel desc = new JLabel("<html><body style='width:560px'>"
-                    + escape(a.description) + "</body></html>");
-                desc.setFont(FONT_DESC);
-                desc.setForeground(new Color(80, 80, 100));
-                desc.setAlignmentX(Component.LEFT_ALIGNMENT);
-                center.add(Box.createVerticalStrut(2));
-                center.add(desc);
-            }
-            row.add(center, BorderLayout.CENTER);
             return row;
         }
 
+        // Meta box UI
         private JPanel metaTile(String label, String value) {
             JPanel tile = new JPanel();
             tile.setLayout(new BoxLayout(tile, BoxLayout.Y_AXIS));
-            tile.setBackground(CLR_SOFT);
-            tile.setBorder(new EmptyBorder(8, 10, 8, 10));
-            JLabel l = new JLabel(label);
-            l.setFont(new Font("Segoe UI", Font.BOLD, 11));
-            l.setForeground(new Color(100, 100, 130));
-            l.setAlignmentX(Component.LEFT_ALIGNMENT);
-            JLabel v = new JLabel(value);
-            v.setFont(FONT_SUBHEAD);
-            v.setForeground(CLR_DARK);
-            v.setAlignmentX(Component.LEFT_ALIGNMENT);
-            tile.add(l);
-            tile.add(v);
+
+            tile.add(new JLabel(label));
+            tile.add(new JLabel(value));
+
             return tile;
         }
 
+        // Export itinerary to text file
         private void exportToText() {
-            String fname = "itinerary_" + safeName(trip.getDestination().getName()) + ".txt";
-            try (PrintWriter pw = new PrintWriter(new FileWriter(fname))) {
-                pw.println("================================================");
-                pw.println("  TRIP ITINERARY  —  " + trip.getDestination());
-                pw.println("================================================");
-                pw.println();
-                pw.println("Destination : " + trip.getDestination());
-                pw.println("Duration    : " + trip.getDays() + " days");
-                pw.printf ("Budget      : Rs. %,.2f%n", trip.getBudget());
-                pw.println("Interest    : " + capitalize(trip.getInterest()));
-                pw.println("Trip ID     : " + trip.getTripId());
-                if (!trip.getNotes().isEmpty())
-                    pw.println("Notes       : " + trip.getNotes());
-                pw.println();
-                String s = trip.getItinerary().getSummary();
-                if (s != null && !s.isEmpty()) {
-                    pw.println("Summary: " + s);
-                    pw.println();
-                }
-                for (DayPlan d : trip.getItinerary().getDays()) {
-                    pw.println("------------------------------------------------");
-                    pw.println(d);
-                }
-                pw.println("================================================");
-                pw.println("Have a wonderful trip!");
-                JOptionPane.showMessageDialog(this,
-                    "✅  Saved to " + fname,
-                    "Exported", JOptionPane.INFORMATION_MESSAGE);
+            try (PrintWriter pw = new PrintWriter(new FileWriter("itinerary.txt"))) {
+                pw.println(trip.getItinerary().toString());
+                JOptionPane.showMessageDialog(this, "Exported successfully");
             } catch (IOException ex) {
-                JOptionPane.showMessageDialog(this,
-                    "Export failed: " + ex.getMessage(),
-                    "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Export failed");
             }
-        }
-
-        private static String safeName(String s) {
-            return s == null ? "trip"
-                : s.replaceAll("[^A-Za-z0-9]+", "_").toLowerCase();
         }
 
         private static String capitalize(String s) {
             if (s == null || s.isEmpty()) return "";
-            return Character.toUpperCase(s.charAt(0)) + s.substring(1).toLowerCase();
+            return Character.toUpperCase(s.charAt(0)) + s.substring(1);
         }
 
         private static String escape(String s) {
             if (s == null) return "";
-            return s.replace("&", "&amp;")
-                    .replace("<", "&lt;")
-                    .replace(">", "&gt;");
+            return s.replace("<", "&lt;").replace(">", "&gt;");
         }
     }
