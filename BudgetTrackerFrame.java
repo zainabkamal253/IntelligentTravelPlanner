@@ -3,6 +3,37 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.util.Map;
 public class BudgetTrackerFrame extends JFrame {
+        public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+        
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+            
         private final BudgetManager bm;
         private final Trip trip;
         private final Runnable onSave;
@@ -17,12 +48,12 @@ public class BudgetTrackerFrame extends JFrame {
             setLocationRelativeTo(null);
             setLayout(new BorderLayout());
             getContentPane().setBackground(CLR_BG);
-            add(headerPanel("💰  Budget Tracker — " + trip.getDestination(), CLR_ORANGE),
+            add(IntelligentTravelPlanner.headerPanel("💰  Budget Tracker — " + trip.getDestination(), CLR_ORANGE),
                 BorderLayout.NORTH);
 
-            ta = styledTA();
+            ta = IntelligentTravelPlanner.styledTA();
             refresh();
-            add(scrollWrap(ta), BorderLayout.CENTER);
+            add(IntelligentTravelPlanner.scrollWrap(ta), BorderLayout.CENTER);
 
             JPanel inp = new JPanel(new GridBagLayout());
             inp.setBackground(CLR_BG);
@@ -43,13 +74,13 @@ public class BudgetTrackerFrame extends JFrame {
             catCB.setFont(FONT_BODY);
             JTextField amtF  = new JTextField(8);  amtF.setFont(FONT_BODY);
             JTextField noteF = new JTextField(16); noteF.setFont(FONT_BODY);
-            JButton addBtn   = styledBtn("➕  Add", CLR_SUCCESS);
+            JButton addBtn   = IntelligentTravelPlanner.styledBtn("➕  Add", CLR_SUCCESS);
 
-            g.gridx = 0; g.gridy = 0; inp.add(lbl("Category:"), g);
+            g.gridx = 0; g.gridy = 0; inp.add(IntelligentTravelPlanner.lbl("Category:"), g);
             g.gridx = 1; inp.add(catCB, g);
-            g.gridx = 2; inp.add(lbl("Amount (Rs):"), g);
+            g.gridx = 2; inp.add(IntelligentTravelPlanner.lbl("Amount (Rs):"), g);
             g.gridx = 3; inp.add(amtF, g);
-            g.gridx = 0; g.gridy = 1; inp.add(lbl("Note:"), g);
+            g.gridx = 0; g.gridy = 1; inp.add(IntelligentTravelPlanner.lbl("Note:"), g);
             g.gridx = 1; g.gridwidth = 2; inp.add(noteF, g);
             g.gridx = 3; g.gridwidth = 1; inp.add(addBtn, g);
             add(inp, BorderLayout.SOUTH);

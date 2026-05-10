@@ -3,6 +3,38 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 public class RouteFrame extends JFrame {
+
+    public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+
         private final JComboBox<String> from, to;
         private final JTextArea out;
 
@@ -15,9 +47,9 @@ public class RouteFrame extends JFrame {
             setLayout(new BorderLayout(10, 10));
             getContentPane().setBackground(CLR_BG);
 
-            add(headerPanel("🗺  Route Planner", CLR_TEAL), BorderLayout.NORTH);
+            add(IntelligentTravelPlanner.headerPanel("🗺  Route Planner", CLR_TEAL), BorderLayout.NORTH);
 
-            out = styledTA();
+            out = IntelligentTravelPlanner.styledTA();
             String cityGrid = formatGrid(cities, 4, 22);
             out.setText("╔══════════════════════════════════════════════════════════╗\n" +
                         "║  " + String.format("%-56s", cities.length + " CITIES IN THE NETWORK") + "║\n" +
@@ -37,14 +69,14 @@ public class RouteFrame extends JFrame {
             from = new JComboBox<>(cities); from.setFont(FONT_BODY);
             to   = new JComboBox<>(cities); to.setFont(FONT_BODY);
             if (cities.length > 1) to.setSelectedIndex(1);
-            row1.add(lbl("Origin:"));      row1.add(from);
-            row1.add(lbl("Destination:")); row1.add(to);
+            row1.add(IntelligentTravelPlanner.lbl("Origin:"));      row1.add(from);
+            row1.add(IntelligentTravelPlanner.lbl("Destination:")); row1.add(to);
             bottom.add(row1, BorderLayout.NORTH);
 
             JPanel row2 = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 5));
             row2.setBackground(CLR_BG);
-            JButton findBtn  = styledBtn("🔍  Find Route", CLR_SUCCESS);
-            JButton closeBtn = styledBtn("✖  Close",       CLR_DANGER);
+            JButton findBtn  = IntelligentTravelPlanner.styledBtn("🔍  Find Route", CLR_SUCCESS);
+            JButton closeBtn = IntelligentTravelPlanner.styledBtn("✖  Close",       CLR_DANGER);
             findBtn.setPreferredSize(new Dimension(160, 42));
             closeBtn.setPreferredSize(new Dimension(140, 42));
             row2.add(findBtn);
@@ -85,4 +117,3 @@ public class RouteFrame extends JFrame {
             return sb.toString();
         }
     }
-}

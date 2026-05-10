@@ -3,6 +3,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 public class PlacesService implements APIService {
+        
 
         @Override
         public String callAPI(String query) throws Exception {
@@ -20,7 +21,7 @@ public class PlacesService implements APIService {
             double[] coords = TouristDB.getInstance().getCoords(city);
             if (coords == null) coords = geocode(city);
 
-            if (USE_FOURSQUARE && !FOURSQUARE_TOKEN.startsWith("YOUR_") && coords != null) {
+            if (IntelligentTravelPlanner.USE_FOURSQUARE && !IntelligentTravelPlanner.FOURSQUARE_TOKEN.startsWith("YOUR_") && coords != null) {
                 try {
                     String result = searchFoursquare(city, interest, coords[0], coords[1]);
                     if (result != null && !result.isEmpty()) return result;
@@ -106,7 +107,7 @@ public class PlacesService implements APIService {
                 + "&sort=RELEVANCE"
                 + "&fields=name,categories,location,distance,rating";
             Map<String, String> h = new HashMap<>();
-            h.put("Authorization", FOURSQUARE_TOKEN);
+            h.put("Authorization", IntelligentTravelPlanner.FOURSQUARE_TOKEN);
             h.put("Accept", "application/json");
             String json = HTTP.get(url, h);
             if (json.contains("\"error\"") || !json.contains("\"results\""))

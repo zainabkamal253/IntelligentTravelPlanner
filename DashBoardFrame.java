@@ -4,6 +4,37 @@ import java.awt.*;
 import java.util.List;
 import java.util.Arrays;
 public class DashBoardFrame extends JFrame {
+        public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+
         private final User user;
         private final List<Trip> trips;
         private final DefaultListModel<Trip> model = new DefaultListModel<>();
@@ -13,8 +44,8 @@ public class DashBoardFrame extends JFrame {
         public DashBoardFrame(User u) {
             this.user = u;
             setTitle("Dashboard — Intelligent Travel Planner");
-            setSize(1100, 680);
-            setMinimumSize(new Dimension(900, 600));
+            setSize(1500, 680);
+            setMinimumSize(new Dimension(1500, 600));
             setLocationRelativeTo(null);
             setDefaultCloseOperation(EXIT_ON_CLOSE);
             setLayout(new BorderLayout(10, 10));
@@ -60,15 +91,15 @@ public class DashBoardFrame extends JFrame {
             bp.setBackground(CLR_BG);
             bp.setBorder(new EmptyBorder(5, 10, 15, 10));
 
-            JButton bN = styledBtn(" New Trip",        CLR_SUCCESS);
-            JButton bV = styledBtn(" View Itinerary",  CLR_ACCENT);
-            JButton bB = styledBtn(" Budget",          CLR_ORANGE);
-            JButton bK = styledBtn(" Bookings",        CLR_PURPLE);
-            JButton bR = styledBtn(" Route Planner",   CLR_TEAL);
-            JButton bD = styledBtn(" Delete",          CLR_DANGER);
-            JButton bL = styledBtn(" Logout",          new Color(90, 90, 110));
+            JButton bN = IntelligentTravelPlanner.styledBtn(" New Trip",        CLR_SUCCESS);
+            JButton bV = IntelligentTravelPlanner.styledBtn(" View Itinerary",  CLR_ACCENT);
+            JButton bB = IntelligentTravelPlanner.styledBtn(" Budget",          CLR_ORANGE);
+            JButton bK = IntelligentTravelPlanner.styledBtn(" Bookings",        CLR_PURPLE);
+            JButton bR = IntelligentTravelPlanner.styledBtn(" Route Planner",   CLR_TEAL);
+            JButton bD = IntelligentTravelPlanner.styledBtn(" Delete",          CLR_DANGER);
+            JButton bL = IntelligentTravelPlanner.styledBtn(" Logout",          new Color(90, 90, 110));
 
-            Dimension btnSize = new Dimension(150, 42);
+            Dimension btnSize = new Dimension(100, 42);
             for (JButton b : new JButton[]{bN, bV, bB, bK, bR, bD, bL}) {
                 b.setPreferredSize(btnSize);
                 b.setMinimumSize(btnSize);

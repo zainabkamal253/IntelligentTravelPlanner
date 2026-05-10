@@ -5,13 +5,46 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Consumer;
 public class TripPlannerFrame extends JFrame {
+
+        public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+        
         public TripPlannerFrame(User owner, Consumer<Trip> onCreate) {
+            
             setTitle("Plan New Trip");
             setSize(720, 820);
             setLocationRelativeTo(null);
             setLayout(new BorderLayout());
             getContentPane().setBackground(CLR_BG);
-            add(headerPanel("✈  Plan Your Next Adventure", CLR_SUCCESS), BorderLayout.NORTH);
+            add(IntelligentTravelPlanner.headerPanel("✈  Plan Your Next Adventure", CLR_SUCCESS), BorderLayout.NORTH);
 
             JPanel form = new JPanel(new GridBagLayout());
             form.setBackground(CLR_BG);
@@ -43,8 +76,8 @@ public class TripPlannerFrame extends JFrame {
                              "nature", "shopping", "cultural"});
             intB.setFont(FONT_BODY);
 
-            styleField(countryF); styleField(daysF);
-            styleField(budgetF); styleField(notesF);
+            IntelligentTravelPlanner.styleField(countryF); IntelligentTravelPlanner.styleField(daysF);
+            IntelligentTravelPlanner.styleField(budgetF); IntelligentTravelPlanner.styleField(notesF);
 
             String[] labels = {
                 "📍 Destination:", "🌍 Country:", "📅 Days:",
@@ -53,19 +86,19 @@ public class TripPlannerFrame extends JFrame {
 
             for (int i = 0; i < fields.length; i++) {
                 g.gridx = 0; g.gridy = i; g.gridwidth = 1; g.weightx = 0;
-                form.add(lbl(labels[i]), g);
+                form.add(IntelligentTravelPlanner.lbl(labels[i]), g);
                 g.gridx = 1; g.weightx = 1; form.add(fields[i], g);
             }
 
-            JButton wBtn = styledBtn("🌤  Live Weather",                CLR_ACCENT);
-            JButton pBtn = styledBtn("🗺  Discover Nearby Places",       new Color(0, 128, 80));
+            JButton wBtn = IntelligentTravelPlanner.styledBtn("🌤  Live Weather",                CLR_ACCENT);
+            JButton pBtn = IntelligentTravelPlanner.styledBtn("🗺  Discover Nearby Places",       new Color(0, 128, 80));
             JPanel btnRow = new JPanel(new GridLayout(1, 2, 10, 0));
             btnRow.setBackground(CLR_BG); btnRow.add(wBtn); btnRow.add(pBtn);
             g.gridx = 0; g.gridy = 6; g.gridwidth = 2; g.weightx = 1; g.weighty = 0;
             g.fill = GridBagConstraints.HORIZONTAL;
             form.add(btnRow, g);
 
-            JTextArea out = styledTA(); out.setRows(14);
+            JTextArea out = IntelligentTravelPlanner.styledTA(); out.setRows(14);
             out.setText(
                 "Enter a destination above, choose your interest, then:\n\n" +
                 "  • Live Weather         — current conditions & travel tip\n" +
@@ -81,7 +114,7 @@ public class TripPlannerFrame extends JFrame {
             form.add(sp, g);
             add(form, BorderLayout.CENTER);
 
-            JButton create = styledBtn("✅  Create Trip & Generate Itinerary", CLR_SUCCESS);
+            JButton create = IntelligentTravelPlanner.styledBtn("✅  Create Trip & Generate Itinerary", CLR_SUCCESS);
             create.setFont(new Font("Segoe UI", Font.BOLD, 15));
             JPanel south = new JPanel(new BorderLayout());
             south.setBackground(CLR_BG);

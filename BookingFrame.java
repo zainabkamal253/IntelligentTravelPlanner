@@ -3,13 +3,44 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.time.LocalDate;
 public class BookingFrame extends JFrame {
+        public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+        
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+
         public BookingFrame(Trip trip, Runnable onSave) {
             setTitle("Bookings — " + trip.getDestination());
             setSize(680, 600);
             setLocationRelativeTo(null);
             setLayout(new BorderLayout());
             getContentPane().setBackground(CLR_BG);
-            add(headerPanel("🏨  Booking Manager — " + trip.getDestination(), CLR_PURPLE),
+            add(IntelligentTravelPlanner.headerPanel("🏨  Booking Manager — " + trip.getDestination(), CLR_PURPLE),
                 BorderLayout.NORTH);
 
             DefaultListModel<Booking> lm = new DefaultListModel<>();
@@ -39,16 +70,16 @@ public class BookingFrame extends JFrame {
             JTextField nameF = new JTextField(); nameF.setFont(FONT_BODY);
             JTextField costF = new JTextField(); costF.setFont(FONT_BODY);
 
-            inp.add(lbl("Type:"));            inp.add(typeCB);
-            inp.add(lbl("Name / Details:"));  inp.add(nameF);
-            inp.add(lbl("Cost (Rs):"));       inp.add(costF);
+            inp.add(IntelligentTravelPlanner.lbl("Type:"));            inp.add(typeCB);
+            inp.add(IntelligentTravelPlanner.lbl("Name / Details:"));  inp.add(nameF);
+            inp.add(IntelligentTravelPlanner.lbl("Cost (Rs):"));       inp.add(costF);
             south.add(inp, BorderLayout.CENTER);
 
             JPanel btns = new JPanel(new GridLayout(1, 2, 10, 0));
             btns.setBackground(CLR_BG);
             btns.setBorder(new EmptyBorder(4, 10, 12, 10));
-            JButton addBtn  = styledBtn("➕  Add Booking",     CLR_SUCCESS);
-            JButton confBtn = styledBtn("✅  Confirm Selected", CLR_PURPLE);
+            JButton addBtn  = IntelligentTravelPlanner.styledBtn("➕  Add Booking",     CLR_SUCCESS);
+            JButton confBtn = IntelligentTravelPlanner.styledBtn("✅  Confirm Selected", CLR_PURPLE);
             btns.add(addBtn);
             btns.add(confBtn);
             south.add(btns, BorderLayout.SOUTH);

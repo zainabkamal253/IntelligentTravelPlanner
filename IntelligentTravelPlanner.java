@@ -85,7 +85,7 @@ public class IntelligentTravelPlanner {
         SwingUtilities.invokeLater(() -> new LoginFrame(um).setVisible(true));
     }
   
-    static JButton styledBtn(String text, Color bg) {
+    public static JButton styledBtn(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setFont(FONT_BTN);
         btn.setBackground(bg);
@@ -103,7 +103,7 @@ public class IntelligentTravelPlanner {
         return btn;
     }
 
-    static JPanel headerPanel(String title, Color bg) {
+    public static JPanel headerPanel(String title, Color bg) {
         JPanel p = new JPanel(new BorderLayout());
         p.setBackground(bg);
         p.setBorder(new EmptyBorder(16, 24, 16, 24));
@@ -113,7 +113,7 @@ public class IntelligentTravelPlanner {
         return p;
     }
 
-    static JTextArea styledTA() {
+    public static JTextArea styledTA() {
         JTextArea ta = new JTextArea();
         ta.setFont(FONT_MONO); ta.setEditable(false);
         ta.setMargin(new Insets(12, 14, 12, 14));
@@ -123,25 +123,25 @@ public class IntelligentTravelPlanner {
         return ta;
     }
 
-    static JLabel lbl(String t) {
+    public static JLabel lbl(String t) {
         JLabel l = new JLabel(t); l.setFont(FONT_BODY); l.setForeground(CLR_DARK); return l;
     }
 
-    static void styleField(JTextField f) {
+    public static void styleField(JTextField f) {
         f.setFont(FONT_BODY); f.setPreferredSize(new Dimension(200, 34));
         f.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(CLR_BORDER, 1),
             BorderFactory.createEmptyBorder(4, 10, 4, 10)));
     }
 
-    static JScrollPane scrollWrap(JTextArea ta) {
+    public static JScrollPane scrollWrap(JTextArea ta) {
         JScrollPane sp = new JScrollPane(ta);
         sp.setBorder(BorderFactory.createLineBorder(CLR_BORDER, 1));
         return sp;
     }
 
     /** Background color matching the trip's interest theme. */
-    static Color interestBg(String interest) {
+    public static Color interestBg(String interest) {
         if (interest == null) return CLR_SOFT;
         switch (interest.toLowerCase()) {
             case "adventure":  return CLR_ADV_BG;
@@ -155,7 +155,7 @@ public class IntelligentTravelPlanner {
     }
 
     /** Accent color matching the interest. */
-    static Color interestAccent(String interest) {
+    public static Color interestAccent(String interest) {
         if (interest == null) return CLR_PRIMARY;
         switch (interest.toLowerCase()) {
             case "adventure":  return CLR_ORANGE;

@@ -7,7 +7,7 @@ import java.util.Random;
       }
 
       public List<TouristPlace> recommend(String var1, String var2) {
-         List var3 = IntelligentTravelPlanner.TouristDB.getInstance().placesFor(var1, var2);
+         List var3 = TouristDB.getInstance().placesFor(var1, var2);
          Collections.shuffle(var3, new Random());
          return var3;
       }
@@ -17,8 +17,8 @@ import java.util.Random;
          String var3 = var1.getDestination().getName();
          String var4 = var1.getInterest() == null ? "general" : var1.getInterest().toLowerCase();
          int var5 = var1.getDays();
-         ArrayList var6 = new ArrayList(IntelligentTravelPlanner.TouristDB.getInstance().placesFor(var3, var4));
-         ArrayList var7 = new ArrayList(IntelligentTravelPlanner.TouristDB.getInstance().placesFor(var3, ""));
+         ArrayList var6 = new ArrayList(TouristDB.getInstance().placesFor(var3, var4));
+         ArrayList var7 = new ArrayList(TouristDB.getInstance().placesFor(var3, ""));
          var7.removeAll(var6);
          Random var8 = new Random();
          Collections.shuffle(var6, var8);

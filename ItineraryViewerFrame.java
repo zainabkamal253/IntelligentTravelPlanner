@@ -4,6 +4,39 @@ import java.awt.*;
 import java.io.*;
 import java.util.List;
 public class ItineraryViewerFrame extends JFrame {
+
+        public static final Color CLR_PRIMARY  = new Color( 13,  71, 161);
+        public static final Color CLR_ACCENT   = new Color( 25, 118, 210);
+        public static final Color CLR_SUCCESS  = new Color( 27, 128,  60);
+        public static final Color CLR_DANGER   = new Color(183,  28,  28);
+        public static final Color CLR_PURPLE   = new Color(106,  27, 154);
+        public static final Color CLR_TEAL     = new Color(  0, 121, 107);
+        public static final Color CLR_ORANGE   = new Color(230, 100,   0);
+        public static final Color CLR_DARK     = new Color( 18,  18,  30);
+        public static final Color CLR_BG       = new Color(240, 244, 255);
+        public static final Color CLR_CARD     = new Color(255, 255, 255);
+        public static final Color CLR_BORDER   = new Color(180, 200, 235);
+        public static final Color CLR_SOFT     = new Color(248, 250, 255);
+
+        // Interest accent colors — used by day-cards in the new viewer
+        public static final Color CLR_ADV_BG   = new Color(255, 240, 230);
+        public static final Color CLR_FOOD_BG  = new Color(255, 245, 225);
+        public static final Color CLR_HIST_BG  = new Color(240, 235, 255);
+        public static final Color CLR_NAT_BG   = new Color(232, 248, 235);
+        public static final Color CLR_SHOP_BG  = new Color(252, 235, 245);
+        public static final Color CLR_CULT_BG  = new Color(235, 245, 255);
+
+        public static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  24);
+        public static final Font FONT_HEADER   = new Font("Segoe UI", Font.BOLD,  16);
+        public static final Font FONT_SUBHEAD  = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_BODY     = new Font("Segoe UI", Font.PLAIN, 13);
+        public static final Font FONT_SMALL    = new Font("Segoe UI", Font.PLAIN, 11);
+        public static final Font FONT_MONO     = new Font("Consolas", Font.PLAIN, 13);
+        public static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+        public static final Font FONT_DAY      = new Font("Segoe UI", Font.BOLD,  18);
+        public static final Font FONT_PLACE    = new Font("Segoe UI", Font.BOLD,  14);
+        public static final Font FONT_DESC     = new Font("Segoe UI", Font.PLAIN, 12);
+
         private final Trip trip;
 
         public ItineraryViewerFrame(Trip t) {
@@ -16,8 +49,8 @@ public class ItineraryViewerFrame extends JFrame {
             getContentPane().setBackground(CLR_BG);
 
             // --- HEADER (interest-themed) ---
-            Color accent = interestAccent(trip.getInterest());
-            add(headerPanel("📋  " + trip.getDays() + "-Day "
+            Color accent = IntelligentTravelPlanner.interestAccent(trip.getInterest());
+            add(IntelligentTravelPlanner.headerPanel("📋  " + trip.getDays() + "-Day "
                 + capitalize(trip.getInterest()) + " Trip — "
                 + trip.getDestination(), accent), BorderLayout.NORTH);
 
@@ -107,8 +140,8 @@ public class ItineraryViewerFrame extends JFrame {
             // --- BOTTOM BAR ---
             JPanel southBar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
             southBar.setBackground(CLR_BG);
-            JButton exportBtn = styledBtn("📄  Export to Text File", CLR_ACCENT);
-            JButton closeBtn  = styledBtn("✖  Close",                new Color(110, 110, 130));
+            JButton exportBtn = IntelligentTravelPlanner.styledBtn("📄  Export to Text File", CLR_ACCENT);
+            JButton closeBtn  = IntelligentTravelPlanner.styledBtn("✖  Close",                new Color(110, 110, 130));
             southBar.add(exportBtn);
             southBar.add(closeBtn);
             add(southBar, BorderLayout.SOUTH);
@@ -119,7 +152,7 @@ public class ItineraryViewerFrame extends JFrame {
 
         /** Builds one styled day card for the itinerary list. */
         private JPanel buildDayCard(DayPlan day, Color accent) {
-            Color bg = interestBg(trip.getInterest());
+            Color bg = IntelligentTravelPlanner.interestBg(trip.getInterest());
 
             JPanel card = new JPanel();
             card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
